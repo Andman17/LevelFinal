@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
-// This class is created for the example scene. There is no support for this script.
 namespace UnityStandardAssets.Characters.FirstPerson
 {
     [Serializable]
@@ -30,8 +30,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public void LookRotation(Transform character, Transform camera)
         {
-            float yRot = Input.GetAxis("Mouse X") * XSensitivity;
-            float xRot = Input.GetAxis("Mouse Y") * YSensitivity;
+            float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
+            float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
 
             m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
             m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
@@ -78,7 +78,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_cursorIsLocked = false;
             }
-            else if(Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+            else if(Input.GetMouseButtonUp(0))
             {
                 m_cursorIsLocked = true;
             }
