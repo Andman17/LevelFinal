@@ -1,31 +1,33 @@
+using System;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
 
-// This class is created for the example scene. There is no support for this script.
+#pragma warning disable 618, 649
 namespace UnityStandardAssets.Characters.FirstPerson
 {
     [RequireComponent(typeof (CharacterController))]
     [RequireComponent(typeof (AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
-        public bool m_IsWalking;
-        public float m_WalkSpeed;
-        public float m_RunSpeed;
-        [Range(0f, 1f)] public float m_RunstepLenghten;
-        public float m_JumpSpeed;
-        public float m_StickToGroundForce;
-        public float m_GravityMultiplier;
-        public MouseLook m_MouseLook;
-        public bool m_UseFovKick;
-        public FOVKick m_FovKick = new FOVKick();
-        public bool m_UseHeadBob;
-        public CurveControlledBob m_HeadBob = new CurveControlledBob();
-        public LerpControlledBob m_JumpBob = new LerpControlledBob();
-        public float m_StepInterval;
-        public AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
-        public AudioClip m_JumpSound;           // the sound played when character leaves the ground.
-        public AudioClip m_LandSound;           // the sound played when character touches back on ground.
+        [SerializeField] private bool m_IsWalking;
+        [SerializeField] private float m_WalkSpeed;
+        [SerializeField] private float m_RunSpeed;
+        [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
+        [SerializeField] private float m_JumpSpeed;
+        [SerializeField] private float m_StickToGroundForce;
+        [SerializeField] private float m_GravityMultiplier;
+        [SerializeField] private MouseLook m_MouseLook;
+        [SerializeField] private bool m_UseFovKick;
+        [SerializeField] private FOVKick m_FovKick = new FOVKick();
+        [SerializeField] private bool m_UseHeadBob;
+        [SerializeField] private CurveControlledBob m_HeadBob = new CurveControlledBob();
+        [SerializeField] private LerpControlledBob m_JumpBob = new LerpControlledBob();
+        [SerializeField] private float m_StepInterval;
+        [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
+        [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
+        [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -40,7 +42,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
-		private float m_crouchFactor = 2f;
 
         // Use this for initialization
         private void Start()
@@ -65,7 +66,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
-                m_Jump = Input.GetButtonDown("Jump");
+                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
@@ -81,24 +82,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
-
-			if(Input.GetMouseButtonDown(1))
-			{
-				m_CharacterController.height /= m_crouchFactor;
-				m_WalkSpeed /= m_crouchFactor;
-				m_RunSpeed /= m_crouchFactor;
-				transform.Find("eyes").localPosition /= m_crouchFactor;
-				transform.Find("target").localPosition /= m_crouchFactor;
-			}
-			else if(Input.GetMouseButtonUp(1))
-			{
-				m_CharacterController.height *= m_crouchFactor;
-				m_WalkSpeed *= m_crouchFactor;
-				m_RunSpeed *= m_crouchFactor;
-				transform.Find("eyes").localPosition *= m_crouchFactor;
-				transform.Find("target").localPosition *= m_crouchFactor;
-			}
-		}
+        }
 
 
         private void PlayLandingSound()
@@ -221,8 +205,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void GetInput(out float speed)
         {
             // Read input
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
+            float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
+            float vertical = CrossPlatformInputManager.GetAxis("Vertical");
 
             bool waswalking = m_IsWalking;
 
